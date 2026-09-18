@@ -1,0 +1,17 @@
+{
+  "sales": {
+    "tool": "sales_summary",
+    "description": "固定周期销售汇总",
+    "input": "store_id"
+  },
+  "inventory": {
+    "tool": "inventory_risk",
+    "description": "库存风险与补货量",
+    "input": "store_id"
+  },
+  "knowledge": {
+    "tool": "search_knowledge",
+    "description": "中文知识检索",
+    "input": "query"
+  }
+}

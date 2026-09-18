@@ -1,0 +1,40 @@
+name: Validate RetailOS
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements.lock.txt
+      - run: pip install -r requirements.lock.txt
+      - run: python -m unittest discover -s tests -v
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+      - name: Verify live web API
+        run: |
+          python -m uvicorn backend.api:app --host 127.0.0.1 --port 8000 > /tmp/retailos-api.log 2>&1 &
+          API_PID=$!
+          printf 'AGENT_BACKEND_URL=http://127.0.0.1:8000\n' > .env.local
+          npm run dev > /tmp/retailos-dev.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" "$API_PID" || true' EXIT
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://localhost:3000/api/health > /dev/null; then break; fi
+            sleep 1
+          done
+          npm run test:api
