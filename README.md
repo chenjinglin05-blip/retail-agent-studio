@@ -6,6 +6,39 @@
 
 > 所有门店、商品和制度均为原创合成演示数据。模型运行在本地 Ollama，无需付费模型 API。系统生成建议，不连接真实采购、改价或退款系统。
 
+## 界面预览
+
+工作台汇总门店经营指标，并提供单商品补货入口与流程概览。以下截图来自本地实际运行，使用合成演示数据。
+
+![RetailOS 运营工作台](public/screenshots/01-workspace.png)
+
+<details>
+<summary>场景一：自然语言补货与参数核对</summary>
+
+输入日均销量 18 件、现货 42 件、在途 12 件、采购提前期 3 天和安全天数 2 天。模型提取参数后，Python 函数计算出目标库存 90 件、建议补货 36 件；界面同时展示公式、参数与断货风险提示。
+
+![自然语言补货：输入、参数与计算结果](public/screenshots/02-replenishment.png)
+
+</details>
+
+<details>
+<summary>场景二：检索门店制度</summary>
+
+搜索“库存”，查看匹配的模拟制度、原文和来源编号，并可基于该制度继续发起问答。
+
+![库存制度检索结果](public/screenshots/03-knowledge-search.png)
+
+</details>
+
+<details>
+<summary>场景三：追溯模型与工具执行过程</summary>
+
+展开执行记录，查看模型提出调用、程序检查参数、函数计算三个步骤。计算函数的输入与输出可直接核对。
+
+![补货执行过程与函数输入输出](public/screenshots/04-execution-trace.png)
+
+</details>
+
 ## 可以做什么
 
 | 功能           | 行为                                                                           |
@@ -59,6 +92,8 @@ ollama pull qwen3:1.7b
 ```
 
 **Windows：双击 `启动完整项目.cmd`。** 启动器检查依赖和端口，建立本地后端配置，启动后台服务，就绪后打开网页。重复启动会复用已运行服务。无需模型的门店分析和手动计算也可独立使用。
+
+以下地址仅在本机启动项目后有效，不是公开在线演示链接。
 
 - 网页：[http://localhost:3000](http://localhost:3000)
 - Python 接口文档：[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
